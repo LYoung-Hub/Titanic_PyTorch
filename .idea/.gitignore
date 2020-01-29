@@ -2,4 +2,4 @@
 /workspace.xml
 # Default ignored files
 /workspace.xml
-venv
+venv/
