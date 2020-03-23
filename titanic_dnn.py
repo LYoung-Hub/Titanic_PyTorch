@@ -5,6 +5,8 @@ import torch
 from torch import nn, optim
 from torch.autograd import Variable
 from torch.nn import Linear, Softmax, Sigmoid, Conv1d, Sequential, ReLU
+import torchvision
+from torchvision import transforms
 
 
 def load_data(path):
@@ -43,7 +45,7 @@ class DNN(nn.Module):
         )
         self.output_layer = Sequential(
             Linear(4, 1),
-            Softmax()
+            Sigmoid()
         )
 
     def forward(self, x):
@@ -80,19 +82,20 @@ class Titanic:
             return feature, p_id
 
     def train(self):
+        dtype = torch.float
         data = load_data('data/train.csv')
         feature, label = self.data_pre_process(data, 'train')
-        x = Variable(torch.tensor(feature))
-        y = Variable(torch.tensor(label))
+        x = torch.tensor(feature, dtype=dtype)
+        y = torch.tensor(label, dtype=dtype)
 
         # create model
         model = DNN()
 
         # Initialize optimizer
-        optimizer = optim.SGD(model.parameters(), lr=0.0001)
+        optimizer = optim.SGD(model.parameters(), lr=0.1)
 
         # Initialize loss function
-        loss = nn.MSELoss()
+        criterion = nn.MSELoss()
 
         # Print model's state_dict
         print("Model's state_dict:")
@@ -106,11 +109,17 @@ class Titanic:
 
         for i in range(100):
             # Forward pass: Compute predicted y by passing x to the model
-            pre = model(x.float())
+            pre = model(x)
 
             # Compute and print loss
-            lo = loss(pre, y)
-            print(i, lo.item())
+            loss = criterion(pre, y)
+
+            print(i, loss.item())
+
+            # Backward and optimize
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
         torch.save(model.state_dict(), 'models/dnn.plk')
 
