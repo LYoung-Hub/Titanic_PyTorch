@@ -149,11 +149,3 @@ if __name__ == '__main__':
     ti = Titanic()
     ti.train()
     ti.test()
-
-# ------
-x = 49/142
-y = 433/1704
-z = 683/1704
-epsilon = 0.005
-0.295*x+0.62*(y+z)
-
