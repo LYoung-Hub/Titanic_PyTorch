@@ -7,6 +7,7 @@ from torch.autograd import Variable
 from torch.nn import Linear, Softmax, Sigmoid, Conv1d, Sequential, ReLU
 import torchvision
 from torchvision import transforms
+import data_process
 
 
 def load_data(path):
@@ -64,6 +65,8 @@ class Titanic:
 
     def train(self):
         dtype = torch.float
+        data_class = data_process.Preprocess()
+        tmp = data_class.process_SibSp()
         data = load_data('data/train.csv')
         feature, label = self.data_pre_process(data, 'train')
         x = torch.tensor(feature, dtype=dtype)
