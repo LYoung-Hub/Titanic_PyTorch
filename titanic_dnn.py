@@ -79,7 +79,7 @@ class Titanic:
         optimizer = optim.SGD(model.parameters(), lr=0.1)
 
         # Initialize loss function
-        criterion = nn.MSELoss()
+        criterion = nn.CrossEntropyLoss()
 
         # Print model's state_dict
         print("Model's state_dict:")
