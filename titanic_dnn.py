@@ -104,8 +104,21 @@ class Titanic:
 
         torch.save(model.state_dict(), 'models/dnn.plk')
 
+    def test(self):
+        dtype = torch.float
+        data = load_data('data/test.csv')
+        feature, label = self.data_pre_process(data)
+        x = torch.tensor(feature, dtype=dtype)
+
+        model = DNN()
+        model.load_state_dict(torch.load('models/dnn.plk'))
+        pre = model(x)
+
+        print(pre)
+
 
 if __name__ == '__main__':
     ti = Titanic()
     ti.train()
+    ti.test()
     # modify_csv('prediction_dnn.csv')
