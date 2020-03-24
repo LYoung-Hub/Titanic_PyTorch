@@ -37,6 +37,10 @@ class PreProcess(object):
     def process_Pclass(self):
         return pd.get_dummies(self.data['Pclass'])
 
+    def process_fare(self):
+        fare_bins = pd.qcut(self.data['Fare'], 4, labels=[0, 1, 2, 3])
+        return pd.get_dummies(fare_bins)
+
     def process_embarked(self):
         return pd.get_dummies(self.data['Embarked'])
 
