@@ -1,3 +1,5 @@
 Titanic_PyTorch.iml
 venv
 .idea
+*.plk
+*.pyc

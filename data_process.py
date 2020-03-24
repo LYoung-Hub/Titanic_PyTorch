@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 class PreProcess(object):
@@ -31,8 +32,8 @@ class PreProcess(object):
         patch_bins = pd.cut(patch_data, bins, labels=[0, 1, 2, 3])
         return pd.get_dummies(patch_bins)
 
-    def process_label(self):
-        return pd.get_dummies(self.data['Survived'])
+    # def process_label(self):
+    #     return pd.get_dummies(self.data['Survived'])
 
     def process_Pclass(self):
         return pd.get_dummies(self.data['Pclass'])
@@ -43,13 +44,22 @@ class PreProcess(object):
     def get_pid(self):
         return self.data['PassengerId']
 
-    def merge_data(self):
+    def merge_data(self, mode='train'):
         sex = self.process_sex()
         Pclass = self.process_Pclass()
         embarked = self.process_embarked()
-        label = self.process_label()
+        age = self.process_age()
+        sibsp = self.process_SibSp()
+        parch = self.process_parch()
 
-        feature = pd.concat([sex, Pclass, embarked], axis=1, sort=False)
+        feature = pd.concat([sex, Pclass, embarked, age, sibsp, parch], axis=1, sort=False)
+
+        if mode == 'train':
+            label = self.data['Survived']
+            return feature.to_numpy(), np.reshape(label.to_numpy(), (-1, 1))
+
+        pid = self.get_pid()
+        return feature.to_numpy(), pid
 
 
 # process = PreProcess()
