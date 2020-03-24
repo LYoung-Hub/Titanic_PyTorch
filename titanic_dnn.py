@@ -1,9 +1,7 @@
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
 import torch
 from torch import nn, optim
-from torch.nn import Linear, Sigmoid, Sequential, Softmax, ReLU
+from torch.nn import Linear, Sigmoid, Sequential, ReLU, Dropout
 from data_process import PreProcess
 
 
@@ -12,16 +10,15 @@ class DNN(nn.Module):
     def __init__(self):
         super(DNN, self).__init__()
         self.dense_layers = Sequential(
-            Linear(20, 128),
+            Linear(24, 256),
             ReLU(),
-            Linear(128, 64),
+            Dropout(),
+            Linear(256, 32),
             ReLU(),
-            Linear(64, 32),
-            ReLU(),
+            Dropout()
         )
         self.output_layer = Sequential(
-            Linear(32, 1),
-            Sigmoid()
+            Linear(32, 1)
         )
 
     def forward(self, x):
@@ -31,9 +28,6 @@ class DNN(nn.Module):
 
 
 class Titanic:
-
-    age_scaler = StandardScaler()
-    fare_scaler = StandardScaler()
 
     def __init__(self):
         pass
@@ -50,7 +44,7 @@ class Titanic:
         model = DNN()
 
         # Initialize optimizer
-        optimizer = optim.Adam(model.parameters(), lr=0.001)
+        optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
         # Initialize loss function
         criterion = nn.MSELoss()
@@ -65,11 +59,9 @@ class Titanic:
         for var_name in optimizer.state_dict():
             print(var_name, "\t", optimizer.state_dict()[var_name])
 
-        for i in range(10000):
+        for i in range(1000):
             # Forward pass: Compute predicted y by passing x to the model
             pre = model(x)
-
-            optimizer.zero_grad()
 
             # Compute and print loss
             loss = criterion(pre, y)
@@ -77,8 +69,25 @@ class Titanic:
             print(i, loss.item())
 
             # Backward and optimize
+            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+        pre = model(x)
+        result = []
+
+        for item in pre:
+            if item > 0.5:
+                result.append(1)
+            else:
+                result.append(0)
+
+        cnt = 0
+        for prediction, ground_truth in zip(result, y):
+            if prediction == ground_truth:
+                cnt += 1
+        acc = cnt / len(result)
+        print(acc)
 
         torch.save(model.state_dict(), 'models/dnn.plk')
 
@@ -110,6 +119,6 @@ class Titanic:
 
 if __name__ == '__main__':
     ti = Titanic()
-    # ti.train()
+    ti.train()
     ti.test()
     # modify_csv('prediction_dnn.csv')

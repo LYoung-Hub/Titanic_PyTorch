@@ -55,8 +55,9 @@ class PreProcess(object):
         age = self.process_age()
         sibsp = self.process_SibSp()
         parch = self.process_parch()
+        fare = self.process_fare()
 
-        feature = pd.concat([sex, Pclass, embarked, age, sibsp, parch], axis=1, sort=False)
+        feature = pd.concat([sex, Pclass, embarked, age, sibsp, parch, fare], axis=1, sort=False)
 
         if mode == 'train':
             label = self.data['Survived']
