@@ -71,11 +71,11 @@ class Titanic:
             return feature, p_id
 
     def train(self):
-        # process = PreProcess()
-        # process.load_data('data/train.csv')
-        # feature, label = process.merge_data()
-        data = pd.read_csv('./data/train.csv')
-        feature, label = self.data_pre_process(data, mode='train')
+        process = PreProcess()
+        process.load_data('data/train.csv')
+        feature, label = process.merge_data('train', if_one_hot=False)
+        # data = pd.read_csv('./data/train.csv')
+        # feature, label = self.data_pre_process(data, mode='train')
 
         param = {
             'booster': 'gbtree',
@@ -121,14 +121,14 @@ class Titanic:
 
     def test(self):
 
-        # process = PreProcess()
-        # process.load_data('data/test.csv')
-        # feature, p_id = process.merge_data(mode='test')
-        # pre_id = p_id.reset_index(drop=True)
-
-        data = pd.read_csv('./data/test.csv')
-        feature, p_id = self.data_pre_process(data, mode='test')
+        process = PreProcess()
+        process.load_data('data/test.csv')
+        feature, p_id = process.merge_data(mode='test', if_one_hot=False)
         pre_id = p_id.reset_index(drop=True)
+        #
+        # data = pd.read_csv('./data/test.csv')
+        # feature, p_id = self.data_pre_process(data, mode='test')
+        # pre_id = p_id.reset_index(drop=True)
 
         feature_in = xgb.DMatrix(feature)
 
