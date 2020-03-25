@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 
 class PreProcess(object):
@@ -66,17 +67,34 @@ class PreProcess(object):
         else:
             return self.data['Embarked'].replace(['S', 'C', 'Q'], [0, 1, 2]).to_frame()
 
+    def process_continuous_age(self):
+        self.data['Age'] = self.data['Age'].fillna(self.data['Age'].mean())
+        scaler = StandardScaler()
+        self.data['Age'] = scaler.fit_transform(self.data['Age'].values.reshape(-1, 1))
+        return self.data['Age'].to_frame()
+
+    def process_continuous_fare(self):
+        self.data['Fare'] = self.data['Fare'].fillna(self.data['Fare'].mean())
+        scaler = StandardScaler()
+        self.data['Fare'] = scaler.fit_transform(self.data['Fare'].values.reshape(-1, 1))
+        return self.data['Fare'].to_frame()
+
     def get_pid(self):
         return self.data['PassengerId']
 
-    def merge_data(self, mode='train', if_one_hot=True):
+    def merge_data(self, mode='train', if_one_hot=True, continuous=False):
         sex = self.process_sex(if_one_hot)
         Pclass = self.process_Pclass(if_one_hot)
         embarked = self.process_embarked(if_one_hot)
-        age = self.process_age(if_one_hot)
         sibsp = self.process_SibSp(if_one_hot)
         parch = self.process_parch(if_one_hot)
-        fare = self.process_fare(if_one_hot)
+
+        if not continuous:
+            age = self.process_age(if_one_hot)
+            fare = self.process_fare(if_one_hot)
+        else:
+            age = self.process_continuous_age()
+            fare = self.process_continuous_fare()
 
         feature = pd.concat([sex, Pclass, embarked, age, sibsp, parch, fare], axis=1, sort=False)
 
