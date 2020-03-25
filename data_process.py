@@ -21,7 +21,7 @@ class PreProcess(object):
     def process_age(self, if_one_hot=True):
         bins = [0, 4, 10, 15, 100]
         age_data = self.data['Age'].fillna(self.data['Age'].median())
-        age_bins = pd.cut(age_data, bins, labels=[0, 1, 2, 3])
+        age_bins = pd.cut(age_data, bins, labels=False)
         if if_one_hot:
             return pd.get_dummies(age_bins)
         else:
@@ -30,7 +30,7 @@ class PreProcess(object):
     def process_SibSp(self, if_one_hot=True):
         bins = [-5, -1, 0, 1, 100]
         sib_data = self.data['SibSp'].fillna(-1)
-        sib_bins = pd.cut(sib_data, bins, labels=[0, 1, 2, 3])
+        sib_bins = pd.cut(sib_data, bins, labels=False)
         if if_one_hot:
             return pd.get_dummies(sib_bins)
         else:
@@ -39,7 +39,7 @@ class PreProcess(object):
     def process_parch(self, if_one_hot=True):
         bins = [-5, -1, 0, 1, 100]
         patch_data = self.data['Parch'].fillna(-1)
-        patch_bins = pd.cut(patch_data, bins, labels=[0, 1, 2, 3])
+        patch_bins = pd.cut(patch_data, bins, labels=False)
         if if_one_hot:
             return pd.get_dummies(patch_bins)
         else:
@@ -53,7 +53,7 @@ class PreProcess(object):
 
     def process_fare(self, if_one_hot=True):
         self.data['Fare'] = self.data['Fare'].fillna(self.data['Fare'].mean())
-        fare_bins = pd.qcut(self.data['Fare'], 4, labels=[0, 1, 2, 3])
+        fare_bins = pd.qcut(self.data['Fare'], 4, labels=False)
         if if_one_hot:
             return pd.get_dummies(fare_bins)
         else:

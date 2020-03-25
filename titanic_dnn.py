@@ -10,7 +10,7 @@ class DNN(nn.Module):
     def __init__(self):
         super(DNN, self).__init__()
         self.dense_layers = Sequential(
-            Linear(24, 256),
+            Linear(7, 256),
             ReLU(),
             Dropout(),
             Linear(256, 32),
@@ -36,7 +36,7 @@ class Titanic:
         dtype = torch.float
         process = PreProcess()
         process.load_data('data/train.csv')
-        feature, label = process.merge_data()
+        feature, label = process.merge_data(mode='train', if_one_hot=False)
         x = torch.tensor(feature, dtype=dtype)
         y = torch.tensor(label, dtype=dtype)
 
@@ -59,7 +59,7 @@ class Titanic:
         for var_name in optimizer.state_dict():
             print(var_name, "\t", optimizer.state_dict()[var_name])
 
-        for i in range(1000):
+        for i in range(10000):
             # Forward pass: Compute predicted y by passing x to the model
             pre = model(x)
 
@@ -95,7 +95,7 @@ class Titanic:
         dtype = torch.float
         process = PreProcess()
         process.load_data('data/test.csv')
-        feature, pid = process.merge_data('test', if_one_hot=True)
+        feature, pid = process.merge_data('test', if_one_hot=False)
         x = torch.tensor(feature, dtype=dtype)
 
         model = DNN()
