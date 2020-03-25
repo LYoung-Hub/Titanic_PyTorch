@@ -39,68 +39,65 @@ class Titanic:
         self.model = None
         self.age_scaler = StandardScaler()
         self.fare_scaler = StandardScaler()
-        pass
+        # pass
 
-    # def data_pre_process(self, data, mode='test'):
-    #     # variables selection, normalization
-    #     data['Sex'] = data['Sex'].replace(['male', 'female'], [1, 0])
-    #
-    #     data['Age'] = data['Age'].fillna(data['Age'].median())
-    #
-    #     bin_count = 5
-    #     data['Age_bin'] = pd.cut(data['Age'], bin_count, labels = False)
-    #     # group_by_age_bin = data.groupby(["Age_bin"], as_index=True)
-    #
-    #     # # data.drop(['age_bin'], 1)
-    #     # df_min_max_bin = pd.DataFrame()
-    #     # df_min_max_bin["min_bin"] = group_by_age_bin.Age.min()
-    #     # df_min_max_bin["max_bin"] = group_by_age_bin.Age.max()
-    #     # df_min_max_bin.reset_index(inplace=True)
-    #
-    #     data['Embarked'] = data['Embarked'].replace(['C', 'S', 'Q'], [0, 1, 2])
-    #     data['Embarked'] = data['Embarked'].fillna(3)
-    #     data['Fare'] = data['Fare'].fillna(data['Fare'].median())
-    #     data['Fare_bin'] = pd.cut(data['Fare'], bin_count, labels=False)
-    #     data['Cabin'] = data['Cabin'].fillna('None')
-    #
-    #     feature = data[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked', 'Cabin', 'Fare_bin', 'Age_bin']].values
-    #     if mode == 'train':
-    #         feature[:, 2] = np.reshape(self.age_scaler.fit_transform(np.reshape(feature[:, 2], (-1, 1))), (-1))
-    #         feature[:, 5] = np.reshape(self.fare_scaler.fit_transform(np.reshape(feature[:, 5], (-1, 1))), (-1))
-    #         label = data['Survived']
-    #         return feature, label
-    #     else:
-    #         feature[:, 2] = np.reshape(self.age_scaler.transform(np.reshape(feature[:, 2], (-1, 1))), (-1))
-    #         feature[:, 5] = np.reshape(self.age_scaler.transform(np.reshape(feature[:, 5], (-1, 1))), (-1))
-    #         p_id = data['PassengerId']
-    #         return feature, p_id
+    def data_pre_process(self, data, mode='test'):
+        # variables selection, normalization
+        data['Sex'] = data['Sex'].replace(['male', 'female'], [1, 0])
+
+        data['Age'] = data['Age'].fillna(data['Age'].median())
+        data['Pclass'] = data['Pclass'].fillna(-1)
+        data['SibSp'] = data['SibSp'].fillna(-1)
+        data['Parch'] = data['Parch'].fillna(-1)
+
+        bin_count = 5
+        data['Age_bin'] = pd.cut(data['Age'], bin_count, labels=False)
+        data['Embarked'] = data['Embarked'].replace(['C', 'S', 'Q'], [0, 1, 2])
+        data['Embarked'] = data['Embarked'].fillna(3)
+        data['Fare'] = data['Fare'].fillna(data['Fare'].median())
+        data['Fare_bin'] = pd.cut(data['Fare'], bin_count, labels=False)
+        # data['Cabin'] = data['Cabin'].fillna('None')
+
+        feature = data[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked', 'Fare_bin', 'Age_bin']].values
+        if mode == 'train':
+            # feature[:, 2] = np.reshape(self.age_scaler.fit_transform(np.reshape(feature[:, 2], (-1, 1))), (-1))
+            # feature[:, 5] = np.reshape(self.fare_scaler.fit_transform(np.reshape(feature[:, 5], (-1, 1))), (-1))
+            label = data['Survived']
+            return feature, label
+        else:
+            # feature[:, 2] = np.reshape(self.age_scaler.transform(np.reshape(feature[:, 2], (-1, 1))), (-1))
+            # feature[:, 5] = np.reshape(self.age_scaler.transform(np.reshape(feature[:, 5], (-1, 1))), (-1))
+            p_id = data['PassengerId']
+            return feature, p_id
 
     def train(self):
-        process = PreProcess()
-        process.load_data('data/train.csv')
-        feature, label = process.merge_data()
+        # process = PreProcess()
+        # process.load_data('data/train.csv')
+        # feature, label = process.merge_data()
+        data = pd.read_csv('./data/train.csv')
+        feature, label = self.data_pre_process(data, mode='train')
 
         param = {
             'booster': 'gbtree',
             'base_score': 0.5,
             'colsample_bylevel': 1,
             'colsample_bytree': 1,
-            # 'gamma': 0.01,
-            'learning_rate': 0.01,
+            'gamma': 0,
+            'learning_rate': 0.1,
             'max_delta_step': 0,
-            'max_depth': 6,
+            'max_depth': 2,
             'min_child_weight': 1,
             'missing': None,
-            'n_estimators': 300,
+            'n_estimators': 150,
             'n_jobs': 1,
             'objective': 'binary:logistic',
             'random_state': 0,
             'reg_alpha': 0,
-            'reg_lambda': 0,
+            'reg_lambda': 1,
             'scale_pos_weight': 1,
             'seed': 1,
             'silent': True,
-            'subsample': 0.9
+            'subsample': 1
         }
 
         data_train = xgb.DMatrix(feature, label=label)
@@ -124,16 +121,19 @@ class Titanic:
 
     def test(self):
 
-        process = PreProcess()
-        process.load_data('data/test.csv')
-        feature, p_id = process.merge_data(mode='test')
+        # process = PreProcess()
+        # process.load_data('data/test.csv')
+        # feature, p_id = process.merge_data(mode='test')
+        # pre_id = p_id.reset_index(drop=True)
 
+        data = pd.read_csv('./data/test.csv')
+        feature, p_id = self.data_pre_process(data, mode='test')
         pre_id = p_id.reset_index(drop=True)
 
         feature_in = xgb.DMatrix(feature)
 
         if self.XGBmodel is not None:
-            pre = [round(value) for value in self.XGBmodel.predict(feature_in)]
+            pre = [int(round(value)) for value in self.XGBmodel.predict(feature_in)]
             prediction = pd.Series(data=pre, name='Survived').to_frame()
             print(pre)
             result = pre_id.to_frame().join(prediction)
