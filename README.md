@@ -2,11 +2,11 @@
 
 ## timeline
 
-| time        | todo               |
-| ----------- | ------------------ |
-| 3.23 - 3.28 | data preprocessing |
-|             |                    |
-|             |                    |
+| time        | todo                                                     | done |
+| ----------- | -------------------------------------------------------- | ---- |
+| 3.23 - 3.28 | data preprocessing                                       | √    |
+| 3.25 - 3.28 | try different models(GBDT, RF, SVM, ideas from notebook) |      |
+|             |                                                          |      |
 
 | PassengerId |                               |      |
 | ----------- | ----------------------------- | ---- |
