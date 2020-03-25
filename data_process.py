@@ -52,6 +52,7 @@ class PreProcess(object):
             return self.data['Pclass'].to_frame()
 
     def process_fare(self, if_one_hot=True):
+        self.data['Fare'] = self.data['Fare'].fillna(self.data['Fare'].mean())
         fare_bins = pd.qcut(self.data['Fare'], 4, labels=[0, 1, 2, 3])
         if if_one_hot:
             return pd.get_dummies(fare_bins)
@@ -59,6 +60,7 @@ class PreProcess(object):
             return fare_bins.to_frame()
 
     def process_embarked(self, if_one_hot=True):
+        self.data['Embarked'] = self.data['Embarked'].fillna('S')
         if if_one_hot:
             return pd.get_dummies(self.data['Embarked'])
         else:
