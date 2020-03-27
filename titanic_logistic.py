@@ -14,7 +14,7 @@ class Titanic:
     def train(self):
         process = PreProcess()
         process.load_data('data/train.csv')
-        feature, label = process.merge_data()
+        feature, label = process.merge_data(if_one_hot=False, continuous=True)
         self.model = LogisticRegression(
             solver='liblinear',
             max_iter=10000, multi_class='ovr',
@@ -26,7 +26,7 @@ class Titanic:
     def test(self):
         process = PreProcess()
         process.load_data('data/test.csv')
-        feature, p_id = process.merge_data('test')
+        feature, p_id = process.merge_data('test', if_one_hot=False, continuous=True)
         pre_id = p_id.reset_index(drop=True)
         if self.model is not None:
             pre = self.model.predict(feature)

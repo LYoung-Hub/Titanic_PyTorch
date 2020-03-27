@@ -1,8 +1,9 @@
 import pandas as pd
 import torch
 from torch import nn, optim
-from torch.nn import Linear, Sigmoid, Sequential, ReLU, Dropout
+from torch.nn import Linear, Sequential, ReLU, Dropout
 from data_process import PreProcess
+from sklearn.model_selection import train_test_split
 
 
 class DNN(nn.Module):
@@ -37,8 +38,6 @@ class Titanic:
         process = PreProcess()
         process.load_data('data/train.csv')
         feature, label = process.merge_data(mode='train', if_one_hot=False, continuous=True)
-        x = torch.tensor(feature, dtype=dtype)
-        y = torch.tensor(label, dtype=dtype)
 
         # create model
         model = DNN()
@@ -61,33 +60,54 @@ class Titanic:
 
         for i in range(10000):
             # Forward pass: Compute predicted y by passing x to the model
-            pre = model(x)
+            feature_train, feature_validation, label_train, label_validation = train_test_split(feature, label, train_size=0.8, shuffle=True)
+            x_train = torch.tensor(feature_train, dtype=dtype)
+            y_train = torch.tensor(label_train, dtype=dtype)
+            x_validation = torch.tensor(feature_validation, dtype=dtype)
+            y_validation = torch.tensor(label_validation, dtype=dtype)
+
+            pre_train = model(x_train)
+            pre_validation = model(x_validation)
 
             # Compute and print loss
-            loss = criterion(pre, y)
-
-            print(i, loss.item())
+            loss = criterion(pre_train, y_train)
+            val_loss = criterion(pre_validation, y_validation)
 
             # Backward and optimize
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-        pre = model(x)
-        result = []
+            result = []
 
-        for item in pre:
-            if item > 0.5:
-                result.append(1)
-            else:
-                result.append(0)
+            for item in pre_train:
+                if item > 0.5:
+                    result.append(1)
+                else:
+                    result.append(0)
 
-        cnt = 0
-        for prediction, ground_truth in zip(result, y):
-            if prediction == ground_truth:
-                cnt += 1
-        acc = cnt / len(result)
-        print(acc)
+            cnt = 0
+            for prediction, ground_truth in zip(result, y_train):
+                if prediction == ground_truth:
+                    cnt += 1
+            acc = cnt / len(result)
+
+            result = []
+
+            for item in pre_validation:
+                if item > 0.5:
+                    result.append(1)
+                else:
+                    result.append(0)
+
+            cnt = 0
+            for prediction, ground_truth in zip(result, y_validation):
+                if prediction == ground_truth:
+                    cnt += 1
+            val_acc = cnt / len(result)
+
+            print('Epoch %d ---- Training loss: %f ---- Validation loss: %f ---- Training acc: %f ---- Validation acc: %f'
+                  % (i, loss.item(), val_loss.item(), acc, val_acc))
 
         torch.save(model.state_dict(), 'models/dnn.plk')
 
