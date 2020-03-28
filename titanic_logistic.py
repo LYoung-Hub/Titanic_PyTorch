@@ -30,7 +30,12 @@ class Titanic:
         pre_id = p_id.reset_index(drop=True)
         if self.model is not None:
             pre = self.model.predict(feature)
+            proba = self.model.predict_proba(feature)
             prediction = pd.Series(data=pre, name='Survived').to_frame()
+            probability = pd.Series(data=[prob[1] for prob in proba], name='logistic_probability').to_frame()
+
+            probability.to_csv(path_or_buf='probability/logistic_probability.csv', index=False)
+
             result = pre_id.to_frame().join(prediction)
             result.to_csv(path_or_buf='prediction_logistic.csv', index=False)
             return result

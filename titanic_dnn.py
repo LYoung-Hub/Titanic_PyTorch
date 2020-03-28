@@ -122,10 +122,13 @@ class Titanic:
         model.load_state_dict(torch.load('models/dnn.plk'))
         pre = model(x)
 
+        probability = pd.Series((i.item() for i in pre.data), name='dnn_probability').to_frame()
+        probability.to_csv(path_or_buf='probability/dnn_probability.csv', index=False)
+
         result = []
 
-        for item in pre:
-            if item > 0.5:
+        for pre_i in pre.data:
+            if pre_i.item() > 0.5:
                 result.append(1)
             else:
                 result.append(0)
@@ -139,6 +142,6 @@ class Titanic:
 
 if __name__ == '__main__':
     ti = Titanic()
-    ti.train()
+    # ti.train()
     ti.test()
     # modify_csv('prediction_dnn.csv')

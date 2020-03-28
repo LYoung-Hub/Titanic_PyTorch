@@ -6,7 +6,7 @@ from data_process import PreProcess
 class Titanic(object):
 
     def __init__(self):
-        self.clf = svm.SVC()
+        self.clf = svm.SVR()
         pass
 
     def train(self):
@@ -32,6 +32,10 @@ class Titanic(object):
 
         pre = self.clf.predict(feature)
 
+        probability = pd.Series([i for i in pre], name='svm_probability').to_frame()
+        probability.to_csv(path_or_buf='probability/svm_probability.csv', index=False)
+
+        # need SVC to get classification result directly
         prediction = pd.Series((i for i in pre), name='Survived')
 
         submission = pd.concat([pid, prediction], axis=1)
