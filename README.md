@@ -6,7 +6,8 @@
 | ----------- | ------------------------------------------------------------ | ---- |
 | 3.23 - 3.28 | data preprocessing                                           | √    |
 | 3.25 - 3.28 | validation, try different models(GBDT, RF, SVM, ideas from notebook) | √    |
-| 3.27 - 3.30 | ensemble all results([ref](https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling)) |      |
+| 3.27 - 3.30 | ensemble all results([ref](https://www.kaggle.com/yassineghouzam/titanic-top-4-with-ensemble-modeling)) | √    |
+| 3.28 - 3.31 | KNN, ensemble two 0.78 cases                                 |      |
 
 | PassengerId |                               |      |
 | ----------- | ----------------------------- | ---- |

@@ -2,6 +2,11 @@ import pandas as pd
 from os import listdir
 from os.path import isfile, join
 
+# read id
+test_path = './data/test.csv'
+test_data = pd.read_csv(test_path)
+
+# read probability
 root = './probability/'
 file_list = [f for f in listdir(root) if isfile(join(root, f))]
 data_list = []
@@ -56,6 +61,7 @@ test_data = pd.read_csv(test_path)
 # scores = data.mean(axis=1)
 # scores = [int(round(i)) for i in scores]
 # scores = pd.Series(scores, name='Survived')
+# calculate mean value
 
 result = pd.concat([test_data['PassengerId'], submission], axis=1)
 result.to_csv('./data/ensemble_submission.csv', index=False)
