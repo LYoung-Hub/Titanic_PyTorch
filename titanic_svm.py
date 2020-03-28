@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn import svm
 from data_process import PreProcess
+from sklearn.preprocessing import MinMaxScaler
 
 
 class Titanic(object):
@@ -32,7 +33,10 @@ class Titanic(object):
 
         pre = self.clf.predict(feature)
 
-        probability = pd.Series([i for i in pre], name='svm_probability').to_frame()
+        scaler = MinMaxScaler()
+        probability = scaler.fit_transform([[i] for i in pre])
+
+        probability = pd.Series([i[0] for i in probability], name='svm_probability').to_frame()
         probability.to_csv(path_or_buf='probability/svm_probability.csv', index=False)
 
         # need SVC to get classification result directly
