@@ -129,12 +129,20 @@ class Titanic:
         feature_in = xgb.DMatrix(feature)
 
         if self.XGBmodel is not None:
-            pre = [int(round(value)) for value in self.XGBmodel.predict(feature_in)]
-            prediction = pd.Series(data=pre, name='Survived').to_frame()
+            # pre = [int(round(value)) for value in self.XGBmodel.predict(feature_in)]
+
+            pre = self.XGBmodel.predict(feature_in)
+            prediction = pd.Series(data=pre, name='XGBoost_probability').to_frame()
             print(pre)
-            result = pre_id.to_frame().join(prediction)
-            result.to_csv(path_or_buf='prediction_xgboost.csv', index=False)
+            result = prediction
+            result.to_csv(path_or_buf=('./probability/XGBoost_probability.csv'), index=False)
             return result
+
+            # prediction = pd.Series(data=pre, name='Survived').to_frame()
+            # print(pre)
+            # result = pre_id.to_frame().join(prediction)
+            # result.to_csv(path_or_buf='prediction_xgboost.csv', index=False)
+            # return result
         else:
             print('Model not exists.')
             return

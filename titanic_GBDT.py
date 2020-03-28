@@ -6,6 +6,9 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
 
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor
+
 
 class Titanic:
     def __init__(self):
@@ -18,6 +21,7 @@ class Titanic:
         process.load_data('data/train.csv')
         feature, label = process.merge_data(mode='train', if_one_hot=False, continuous=True)
 
+        # label_float = [float(tmp) for tmp in label]
         test_size = 0.3
         lr_list = [0.25, 0.5, 0.8, 1, 1.2]
 
@@ -26,13 +30,13 @@ class Titanic:
             y_train, y_val = y_train.ravel(), y_val.ravel()
 
             if model_type == 'RF':
-                gb_clf = RandomForestClassifier(
+                gb_clf = RandomForestRegressor(
                     n_estimators=20,
                     max_features=2,
                     max_depth=2,
                 )
             else:
-                gb_clf = GradientBoostingClassifier(
+                gb_clf = GradientBoostingRegressor(
                     n_estimators=20,
                     learning_rate=learning_rate,
                     max_features=2,
@@ -61,17 +65,21 @@ class Titanic:
         feature, p_id = process.merge_data(mode='test', if_one_hot=False)
         pre_id = p_id.reset_index(drop=True)
 
+        # if model_type == 'RF':
+        #     pre = [int(round(value)) for value in self.RF_model.predict(feature)]
+        # else:
+        #     pre = [int(round(value)) for value in self.GBDT_model.predict(feature)]
+
         if model_type == 'RF':
-            pre = [int(round(value)) for value in self.RF_model.predict(feature)]
+            pre = self.RF_model.predict(feature)
         else:
-            pre = [int(round(value)) for value in self.GBDT_model.predict(feature)]
+            pre = self.GBDT_model.predict(feature)
 
-        prediction = pd.Series(data=pre, name='Survived').to_frame()
+        prediction = pd.Series(data=pre, name='%s_probability'%model_type).to_frame()
         print(pre)
-        result = pre_id.to_frame().join(prediction)
-        result.to_csv(path_or_buf=('prediction_%s.csv' % model_type), index=False)
+        result = prediction
+        result.to_csv(path_or_buf=('./probability/%s_probability.csv' % model_type), index=False)
         return result
-
 
 if __name__ == '__main__':
     ti = Titanic()
