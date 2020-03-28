@@ -5,9 +5,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.preprocessing import scale
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import MinMaxScaler
 
 
 class Titanic:
@@ -75,8 +76,11 @@ class Titanic:
         else:
             pre = self.GBDT_model.predict(feature)
 
-        prediction = pd.Series(data=pre, name='%s_probability'%model_type).to_frame()
-        print(pre)
+        pre = pre.reshape(-1, 1)
+        scaler = MinMaxScaler()
+        scaler.fit(pre)
+        pre = scaler.transform(pre)
+        prediction = pd.Series(data=pre.reshape(1, -1)[0], name='%s_probability'%model_type).to_frame()
         result = prediction
         result.to_csv(path_or_buf=('./probability/%s_probability.csv' % model_type), index=False)
         return result
