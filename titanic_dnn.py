@@ -4,6 +4,7 @@ from torch import nn, optim
 from torch.nn import Linear, Sequential, ReLU, Dropout
 from data_process import PreProcess
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 
 
 class DNN(nn.Module):
@@ -122,7 +123,11 @@ class Titanic:
         model.load_state_dict(torch.load('models/dnn.plk'))
         pre = model(x)
 
-        probability = pd.Series((i.item() for i in pre.data), name='dnn_probability').to_frame()
+        probability = [[i.item()] for i in pre.data]
+        scaler = MinMaxScaler()
+        probability = scaler.fit_transform(probability)
+
+        probability = pd.Series([i[0] for i in probability], name='dnn_probability').to_frame()
         probability.to_csv(path_or_buf='probability/dnn_probability.csv', index=False)
 
         result = []
