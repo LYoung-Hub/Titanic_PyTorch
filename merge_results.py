@@ -23,6 +23,7 @@ print('logistic std: %f' % data['logistic_probability'].std())
 print('GBDT std: %f' % data['GBDT_probability'].std())
 print('xgboost std: %f' % data['XGBoost_probability'].std())
 print('RF std: %f' % data['RF_probability'].std())
+print('KNN std: %f' % data['knn_probability'].std())
 
 print('dnn mean: %f' % data['dnn_probability'].mean())
 print('svm mean: %f' % data['svm_probability'].mean())
@@ -30,6 +31,7 @@ print('logistic mean: %f' % data['logistic_probability'].mean())
 print('GBDT mean: %f' % data['GBDT_probability'].mean())
 print('xgboost mean: %f' % data['XGBoost_probability'].mean())
 print('RF mean: %f' % data['RF_probability'].mean())
+print('KNN mean: %f' % data['knn_probability'].mean())
 
 result = []
 for i in range(len(data)):
