@@ -1,14 +1,11 @@
-import pandas as pd
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-
 import numpy as np
 import pandas as pd
 import xgboost as xgb
 from sklearn import metrics
 import matplotlib.pyplot as plt
 from data_process import PreProcess
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 
 
 def load_data(path):
