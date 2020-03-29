@@ -63,9 +63,12 @@ submission = pd.Series(data=result, name='Survived')
 # read id
 test_path = './data/test.csv'
 test_data = pd.read_csv(test_path)
+
+votes = pd.concat([(data[i]>0.5)*1 for i in data], axis=1)
+scores = (votes.sum(axis=1) >= 4)*1
 # scores = data.mean(axis=1)
 # scores = [int(round(i)) for i in scores]
-# submission = pd.Series(scores, name='Survived')
+submission = pd.Series(scores, name='Survived')
 # calculate mean value
 
 result = pd.concat([test_data['PassengerId'], submission], axis=1)
