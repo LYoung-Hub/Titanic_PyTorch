@@ -43,12 +43,15 @@ for i in range(len(data)):
         result.append(1)
         continue
 
-    if data['RF_probability'][i] > 0.6 and data['GBDT_probability'][i] > 0.6:
+    if (data['RF_probability'][i] > 0.6 and data['GBDT_probability'][i] > 0.6) or\
+            (data['svm_probability'][i] > 0.6 and data['GBDT_probability'][i] > 0.6) or\
+            (data['RF_probability'][i] > 0.6 and data['svm_probability'][i] > 0.6):
         result.append(1)
         continue
 
     average = 0.2 * data['dnn_probability'][i] + 0.15 * data['GBDT_probability'][i] + 0.15 * data['logistic_probability'][i]\
-              + 0.2 * data['RF_probability'][i] + 0.05 * data['XGBoost_probability'][i] + 0.25 * data['svm_probability'][i]
+              + 0.2 * data['RF_probability'][i] + 0.05 * data['XGBoost_probability'][i] + 0.2 * data['svm_probability'][i]\
+              + 0.05 * data['knn_probability'][i]
 
     if average > 0.5:
         result.append(1)
@@ -60,9 +63,9 @@ submission = pd.Series(data=result, name='Survived')
 # read id
 test_path = './data/test.csv'
 test_data = pd.read_csv(test_path)
-scores = data.mean(axis=1)
-scores = [int(round(i)) for i in scores]
-submission = pd.Series(scores, name='Survived')
+# scores = data.mean(axis=1)
+# scores = [int(round(i)) for i in scores]
+# submission = pd.Series(scores, name='Survived')
 # calculate mean value
 
 result = pd.concat([test_data['PassengerId'], submission], axis=1)

@@ -13,7 +13,7 @@ class Titanic(object):
     def train(self):
         process = PreProcess()
         process.load_data('data/train.csv')
-        feature, label = process.merge_data(mode='train', if_one_hot=True, continuous=False)
+        feature, label = process.merge_data(mode='train', if_one_hot=False, continuous=False)
 
         self.clf.fit(feature, label)
         pre = self.clf.predict(feature)
@@ -29,7 +29,7 @@ class Titanic(object):
     def test(self):
         process = PreProcess()
         process.load_data('data/test.csv')
-        feature, pid = process.merge_data('test', if_one_hot=True, continuous=False)
+        feature, pid = process.merge_data('test', if_one_hot=False, continuous=False)
 
         pre = self.clf.predict(feature)
 

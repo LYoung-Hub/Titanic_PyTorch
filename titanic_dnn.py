@@ -38,7 +38,7 @@ class Titanic:
         dtype = torch.float
         process = PreProcess()
         process.load_data('data/train.csv')
-        feature, label = process.merge_data(mode='train', if_one_hot=False, continuous=True)
+        feature, label = process.merge_data(mode='train', if_one_hot=False, continuous=False)
 
         # create model
         model = DNN()
@@ -116,7 +116,7 @@ class Titanic:
         dtype = torch.float
         process = PreProcess()
         process.load_data('data/test.csv')
-        feature, pid = process.merge_data('test', if_one_hot=False, continuous=True)
+        feature, pid = process.merge_data('test', if_one_hot=False, continuous=False)
         x = torch.tensor(feature, dtype=dtype)
 
         model = DNN()
@@ -147,6 +147,6 @@ class Titanic:
 
 if __name__ == '__main__':
     ti = Titanic()
-    # ti.train()
+    ti.train()
     ti.test()
     # modify_csv('prediction_dnn.csv')
