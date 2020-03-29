@@ -45,19 +45,19 @@ class MergeResults(object):
                 result.append(1)
                 continue
 
-            if self.data['GBDT_probability'][i] > 0.8:
-                result.append(1)
-                continue
+            # if self.data['GBDT_probability'][i] > 0.8:
+            #     result.append(1)
+            #     continue
 
             if (self.data['RF_probability'][i] > 0.6 and self.data['GBDT_probability'][i] > 0.6) or\
-                    (self.data['svm_probability'][i] > 0.6 and self.data['GBDT_probability'][i] > 0.6) or\
-                    (self.data['RF_probability'][i] > 0.6 and self.data['svm_probability'][i] > 0.6):
+                    (self.data['svm_probability'][i] > 0.7 and self.data['GBDT_probability'][i] > 0.6) or\
+                    (self.data['RF_probability'][i] > 0.6 and self.data['svm_probability'][i] > 0.7):
                 result.append(1)
                 continue
 
-            average = 0.2 * self.data['dnn_probability'][i] + 0.15 * self.data['GBDT_probability'][i] + 0.15 * self.data['logistic_probability'][i]\
-                      + 0.2 * self.data['RF_probability'][i] + 0.05 * self.data['XGBoost_probability'][i] + 0.2 * self.data['svm_probability'][i]\
-                      + 0.05 * self.data['knn_probability'][i]
+            average = 0.4 * self.data['GBDT_probability'][i] + 0.12 * self.data['logistic_probability'][i]\
+                      + 0.12 * self.data['RF_probability'][i] + 0.12 * self.data['XGBoost_probability'][i] + 0.12 * self.data['svm_probability'][i]\
+                      + 0.12 * self.data['knn_probability'][i]
 
             if average > 0.5:
                 result.append(1)
@@ -92,5 +92,5 @@ if __name__ == '__main__':
     merge = MergeResults()
     merge.print_statistics()
     merge.merge_logic()
-    merge.merge_vote()
-    merge.merge_mean()
+    # merge.merge_vote()
+    # merge.merge_mean()

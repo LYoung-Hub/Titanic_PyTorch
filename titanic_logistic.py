@@ -14,8 +14,8 @@ class Titanic:
         process.load_data('data/train.csv')
         feature, label = process.merge_data(if_one_hot=False, continuous=False)
         self.model = LogisticRegression(
-            solver='liblinear',
-            max_iter=10000, multi_class='ovr',
+            max_iter=10000,
+            multi_class='ovr',
             verbose=1
         ).fit(feature, label)
         acc = self.model.score(feature, label)
