@@ -92,5 +92,5 @@ if __name__ == '__main__':
     merge = MergeResults()
     merge.print_statistics()
     merge.merge_logic()
-    # merge.merge_vote()
-    # merge.merge_mean()
+    merge.merge_vote()
+    merge.merge_mean()
