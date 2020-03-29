@@ -28,7 +28,7 @@ class Titanic(object):
         pre = self.neigh.predict(feature)
         probability = self.neigh.predict_proba(feature)
 
-        probability = pd.Series([i[0] for i in probability], name='knn_probability').to_frame()
+        probability = pd.Series([1.0 - i[0] for i in probability], name='knn_probability').to_frame()
         probability.to_csv(path_or_buf='probability/knn_probability.csv', index=False)
 
         prediction = pd.Series((i for i in pre), name='Survived')

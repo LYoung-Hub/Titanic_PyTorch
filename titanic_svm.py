@@ -28,7 +28,7 @@ class Titanic(object):
         pre = self.clf.predict(feature)
         probability = self.clf.predict_proba(feature)
 
-        probability = pd.Series([i[0] for i in probability], name='svm_probability').to_frame()
+        probability = pd.Series([1.0 - i[0] for i in probability], name='svm_probability').to_frame()
         probability.to_csv(path_or_buf='probability/svm_probability.csv', index=False)
 
         prediction = pd.Series((i for i in pre), name='Survived')
