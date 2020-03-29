@@ -58,12 +58,10 @@ submission = pd.Series(data=result, name='Survived')
 # read id
 test_path = './data/test.csv'
 test_data = pd.read_csv(test_path)
-# scores = data.mean(axis=1)
-# scores = [int(round(i)) for i in scores]
-# scores = pd.Series(scores, name='Survived')
+scores = data.mean(axis=1)
+scores = [int(round(i)) for i in scores]
+submission = pd.Series(scores, name='Survived')
 # calculate mean value
 
 result = pd.concat([test_data['PassengerId'], submission], axis=1)
-result.to_csv('./data/ensemble_submission.csv', index=False)
-
-# print(result)
+result.to_csv('./data/ensemble_submission_2.csv', index=False)
