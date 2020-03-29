@@ -20,7 +20,7 @@ class Titanic:
     def train(self, model_type):
         process = PreProcess()
         process.load_data('data/train.csv')
-        feature, label = process.merge_data(mode='train', if_one_hot=False, continuous=True)
+        feature, label = process.merge_data(mode='train', if_one_hot=False, continuous=False)
 
         # label_float = [float(tmp) for tmp in label]
         test_size = 0.3
@@ -87,5 +87,5 @@ class Titanic:
 
 if __name__ == '__main__':
     ti = Titanic()
-    ti.train('RF')
-    ti.test('RF')
+    ti.train('GBDT')
+    ti.test('GBDT')

@@ -16,7 +16,7 @@ for file_name in file_list:
 
 data = pd.concat(data_list, axis=1)
 
-# statistic
+# statistic:)
 print('dnn std: %f' % data['dnn_probability'].std())
 print('svm std: %f' % data['svm_probability'].std())
 print('logistic std: %f' % data['logistic_probability'].std())
