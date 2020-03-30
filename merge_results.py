@@ -29,6 +29,7 @@ class MergeResults(object):
         print('xgboost std: %f' % self.data['XGBoost_probability'].std())
         print('RF std: %f' % self.data['RF_probability'].std())
         print('KNN std: %f' % self.data['knn_probability'].std())
+        print('DT std: %f' % self.data['DT_probability'].std())
 
         print('dnn mean: %f' % self.data['dnn_probability'].mean())
         print('svm mean: %f' % self.data['svm_probability'].mean())
@@ -37,6 +38,7 @@ class MergeResults(object):
         print('xgboost mean: %f' % self.data['XGBoost_probability'].mean())
         print('RF mean: %f' % self.data['RF_probability'].mean())
         print('KNN mean: %f' % self.data['knn_probability'].mean())
+        print('DT std: %f' % self.data['DT_probability'].std())
 
     def merge_logic(self):
         result = []
@@ -55,9 +57,10 @@ class MergeResults(object):
                 result.append(1)
                 continue
 
-            average = 0.4 * self.data['GBDT_probability'][i] + 0.12 * self.data['logistic_probability'][i]\
-                      + 0.12 * self.data['RF_probability'][i] + 0.12 * self.data['XGBoost_probability'][i] + 0.12 * self.data['svm_probability'][i]\
-                      + 0.12 * self.data['knn_probability'][i]
+            average = 0.1 * self.data['GBDT_probability'][i] + 0.1 * self.data['logistic_probability'][i]\
+                      + 0.1 * self.data['RF_probability'][i] + 0.1 * self.data['XGBoost_probability'][i]\
+                      + 0.3 * self.data['svm_probability'][i] + 0.1 * self.data['knn_probability'][i]\
+                      + 0.1 * self.data['DT_probability'][i] + 0.1 * self.data['dnn_probability'][i]
 
             if average > 0.5:
                 result.append(1)
